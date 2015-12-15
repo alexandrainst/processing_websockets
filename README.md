@@ -1,10 +1,10 @@
 # Websockets
 Is a websocket library, including both server and client, for Processing
 
-** Create websocket servers and clients, which makes it possible to communicate with the
+**Create websocket servers and clients, which makes it possible to communicate with the
 outside world including web sites. With this library it is possible to have true two-way
 real-time connections with other Processing sketches, web sites, Internet of Things
-devises etc. **
+devises etc.**
 
 ## Updates
 This is the initial version of the library, and it is therefore an update in it self :-)
