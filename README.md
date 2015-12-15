@@ -8,15 +8,13 @@ devises etc.**
 ## Updates
 This is the initial version of the library, and it is therefore an update in it self :-)
 
-## Technical development details
-The library has been developed on a Mac with El Capitan, I have used the Eclipse Luna IDE,
-and I have only tested on Processing version 3.0.1.
+## Download
+The library can be downloaded here:
+https://github.com/alexandrainst/processing_websockets/blob/master/webSockets.zip?raw=true
 
-The library is build with the Jetty websocket implementation, and different Jetty libraries
-are therefore needed for running this library. All dependencies are included in the downloadable
-zip file. The source code is available through this Github project (open source under MIT
-license) as well as included in the zip file below.
-
+## Installation
+Unzip and put the extracted webSockets folder into the libraries folder of your Processing
+sketches. Reference and examples are included in the webSockets folder.
 
 ## Examples explained
 I have provided two simple examples on using both the client and server part. These can be
@@ -109,11 +107,11 @@ void webSocketServerEvent(String msg){
  y=random(height);
 }
 ```
+## Technical development details
+The library has been developed on a Mac with El Capitan, I have used the Eclipse Luna IDE,
+and I have only tested on Processing version 3.0.1.
 
-## Download
-The library can be downloaded here:
-https://github.com/alexandrainst/processing_websockets/blob/master/webSockets.zip?raw=true
-
-## Installation
-Unzip and put the extracted webSockets folder into the libraries folder of your Processing
-sketches. Reference and examples are included in the webSockets folder.
+The library is build with the Jetty websocket implementation, and different Jetty libraries
+are therefore needed for running this library. All dependencies are included in the downloadable
+zip file. The source code is available through this Github project (open source under MIT
+license) as well as included in the zip file below.
