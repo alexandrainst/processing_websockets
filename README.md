@@ -1,5 +1,4 @@
-# Websockets
-Is a websocket library, including both server and client, for Processing
+# Websockets for Processing
 
 **Create websocket servers and clients, which makes it possible to communicate with the
 outside world including web sites. With this library it is possible to have true two-way
