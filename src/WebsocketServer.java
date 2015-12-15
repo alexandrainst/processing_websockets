@@ -9,11 +9,24 @@ import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 
 import processing.core.PApplet;
 
+/**
+ * 
+ * @author Lasse Steenbock Vestergaard
+ *
+ */
 public class WebsocketServer {
 	private PApplet parent;
 	private Method websocketServerEvent;
 	private WebsocketServerController serverController;
 	
+	/**
+	 * 
+	 * The websocket server object that is initiated directly in the Processing sketch
+	 * 
+	 * @param parent Processings PApplet object
+	 * @param port The port number you want the websocket server to initiate its connection on
+	 * @param uri The uri you want your server to respond to. Ex. /john (if the port is set to ex. 8025, then the full URI would be ws://localhost:8025/john).
+	 */
 	public WebsocketServer(PApplet parent, int port, String uri){
 		this.parent=parent;
 		this.parent.registerMethod("dispose", this);
@@ -48,6 +61,12 @@ public class WebsocketServer {
 		}
 	}
 	
+	/**
+	 * 
+	 * This method is used for sending messages to all connected clients. This method will be updated with the possibility for sending messages to specific clients!
+	 * 
+	 * @param message The message you want to send to all clients
+	 */
 	//TODO: Add possibility for sending back to specific client
 	public void sendMessage(String message){
 		serverController.writeAllMembers(message);

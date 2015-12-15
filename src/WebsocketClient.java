@@ -2,16 +2,28 @@ package websockets;
 
 import java.lang.reflect.Method;
 import java.net.URI;
-
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
-
 import processing.core.PApplet;
 
+/**
+ * 
+ * @author Lasse Steenbock Vestergaard
+ *
+ * Class for creating websocket client connections to any websocket server. Sub-protocols have not yet been implemented, and it's therefore only possible to connect to regular websocket servers. 
+ *
+ */
 public class WebsocketClient {
 	private Method webSocketEvent;
 	private WebsocketClientEvents socket;
 	
+	/**
+	 * 
+	 * Initiating the client connection
+	 * 
+	 * @param parent The PApplet object coming from Processing
+	 * @param endpointURI The URI to connect to Ex. ws://localhost:8025/john
+	 */
 	public WebsocketClient(PApplet parent, String endpointURI) {
 		parent.registerMethod("dispose", this);
 		
@@ -35,6 +47,12 @@ public class WebsocketClient {
 		}
 	}
 	
+	/**
+	 * 
+	 * Send message to the websocket server. At a later stage it should be possible to send messages to specific clients connected to the same server
+	 * 
+	 * @param message The message to send
+	 */
 	public void sendMessage(String message){
 		socket.sendMessage(message);
 	}
