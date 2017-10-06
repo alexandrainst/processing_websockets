@@ -3,6 +3,7 @@ package websockets;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.concurrent.CountDownLatch;
+import java.nio.ByteBuffer;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
@@ -26,10 +27,12 @@ public class WebsocketClientEvents {
 	CountDownLatch latch = new CountDownLatch(1);
 	private PApplet parent;
 	private Method onMessageEvent;
+	private Method onMessageEventBinary;
 
-	public WebsocketClientEvents(PApplet p, Method event) {
+	public WebsocketClientEvents(PApplet p, Method event, Method eventBinary) {
 		parent = p;
 		onMessageEvent = event;
+		onMessageEventBinary = eventBinary;
 	}
 
 	/**
@@ -50,6 +53,20 @@ public class WebsocketClientEvents {
 						.println("Disabling webSocketEvent() because of an error.");
 				e.printStackTrace();
 				onMessageEvent = null;
+			}
+		}
+	}
+
+	@OnWebSocketMessage
+	public void onBinary(Session session, byte[] buf, int offset, int length) throws IOException {
+		if (onMessageEventBinary != null) {
+			try {
+				onMessageEventBinary.invoke(parent, buf, offset, length);
+			} catch (Exception e) {
+				System.err
+						.println("Disabling webSocketEvent() because of an error.");
+				e.printStackTrace();
+				onMessageEventBinary = null;
 			}
 		}
 	}
@@ -75,6 +92,15 @@ public class WebsocketClientEvents {
 	public void sendMessage(String str) {
 		try {
 			session.getRemote().sendString(str);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void sendMessage(byte[] data) {
+		try {
+			ByteBuffer buf = ByteBuffer.wrap(data);
+			session.getRemote().sendBytes(buf);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
