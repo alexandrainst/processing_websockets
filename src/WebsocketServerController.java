@@ -3,6 +3,8 @@ package websockets;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.nio.ByteBuffer;
+import java.io.IOException;
 
 import processing.core.PApplet;
 
@@ -60,6 +62,17 @@ public class WebsocketServerController {
 	public void writeAllMembers(String message) {
 		for (WebsocketServerEvents member : members) {
 			member.session.getRemote().sendStringByFuture(message);
+		}
+	}
+
+	public void writeAllMembers(byte[] data) {
+		for (WebsocketServerEvents member : members) {
+			try {
+				ByteBuffer buf = ByteBuffer.wrap(data);
+				member.session.getRemote().sendBytes(buf);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

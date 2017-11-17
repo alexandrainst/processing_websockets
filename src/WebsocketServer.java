@@ -72,7 +72,11 @@ public class WebsocketServer {
 		serverController.writeAllMembers(message);
 		
 	}
-	
+
+	public void sendMessage(byte[] data){
+		serverController.writeAllMembers(data);
+	}
+
 	public void dispose(){
 		// Anything in here will be called automatically when 
 	    // the parent sketch shuts down. For instance, this might
