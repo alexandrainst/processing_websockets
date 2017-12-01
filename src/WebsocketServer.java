@@ -17,6 +17,7 @@ import processing.core.PApplet;
 public class WebsocketServer {
 	private PApplet parent;
 	private Method websocketServerEvent;
+	private Method websocketServerEventBinary;
 	private WebsocketServerController serverController;
 	
 	/**
@@ -33,12 +34,13 @@ public class WebsocketServer {
 		
 		try {
         	websocketServerEvent = parent.getClass().getMethod("webSocketServerEvent", String.class);
+					websocketServerEventBinary = parent.getClass().getMethod("webSocketServerEvent", byte[].class, int.class, int.class);
         } catch (Exception e) {
         	// no such method, or an error.. which is fine, just ignore
         }
 		
 		Server server = new Server(port);
-		serverController = new WebsocketServerController(parent, websocketServerEvent);
+		serverController = new WebsocketServerController(parent, websocketServerEvent, websocketServerEventBinary);
 		 
 		WebSocketHandler wsHandler = new WebSocketHandler(){
 			
