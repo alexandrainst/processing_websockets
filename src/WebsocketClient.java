@@ -15,6 +15,7 @@ import processing.core.PApplet;
  */
 public class WebsocketClient {
 	private Method webSocketEvent;
+	private Method webSocketEventBinary;
 	private WebsocketClientEvents socket;
 	
 	/**
@@ -29,13 +30,14 @@ public class WebsocketClient {
 		
 		try {
         	webSocketEvent = parent.getClass().getMethod("webSocketEvent", String.class);
+        	webSocketEventBinary = parent.getClass().getMethod("webSocketEvent", byte[].class, int.class, int.class);
         } catch (Exception e) {
         	// no such method, or an error.. which is fine, just ignore
         }
 		
 		WebSocketClient client = new WebSocketClient();
 		try {
-			socket = new WebsocketClientEvents(parent, webSocketEvent);
+			socket = new WebsocketClientEvents(parent, webSocketEvent, webSocketEventBinary);
 			client.start();
 			URI echoUri = new URI(endpointURI);
 			ClientUpgradeRequest request = new ClientUpgradeRequest();
@@ -55,6 +57,10 @@ public class WebsocketClient {
 	 */
 	public void sendMessage(String message){
 		socket.sendMessage(message);
+	}
+
+	public void sendMessage(byte[] data){
+		socket.sendMessage(data);
 	}
 	
 	public void dispose(){

@@ -6,6 +6,7 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import java.nio.ByteBuffer;
 
 /**
  * 
@@ -60,6 +61,11 @@ public class WebsocketServerEvents {
     	ctrl.sendToOnMessageListener(message);
     }
  
+    @OnWebSocketMessage
+    public void handleBinary(byte[] buf, int offset, int length) {
+        ctrl.sendToOnBinaryListener(buf, offset, length);
+    }
+
     /**
      * 
      * Handling connection errors and writes the to the console
