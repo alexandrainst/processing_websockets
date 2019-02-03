@@ -120,7 +120,7 @@ public class WebsocketServerController {
 	}
 
 	public void sendToOnBinaryListener(byte[] buf, int offset, int length){
-		if (serverEvent != null) {
+		if (serverEventBinary != null) {
 		    try {
 					serverEventBinary.invoke(parent, buf, offset, length);
 		    } catch (Exception e) {
