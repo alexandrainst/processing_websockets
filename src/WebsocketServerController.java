@@ -3,6 +3,8 @@ package websockets;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.nio.ByteBuffer;
+import java.io.IOException;
 
 import processing.core.PApplet;
 
@@ -18,6 +20,7 @@ public class WebsocketServerController {
 	private List<WebsocketServerEvents> members = new ArrayList<>();
 	private PApplet parent;
 	private Method serverEvent;
+	private Method serverEventBinary;
 	
 	/**
 	 * 
@@ -26,9 +29,10 @@ public class WebsocketServerController {
 	 * @param p The Processing sketch's PApplet object
 	 * @param serverEvent The Processing sketch's websocket event function
 	 */
-	public WebsocketServerController(PApplet p, Method serverEvent){
+	public WebsocketServerController(PApplet p, Method serverEvent, Method serverEventBinary){
 		parent=p;
 		this.serverEvent=serverEvent;
+		this.serverEventBinary=serverEventBinary;
 	}
 
 	/**
@@ -60,6 +64,17 @@ public class WebsocketServerController {
 	public void writeAllMembers(String message) {
 		for (WebsocketServerEvents member : members) {
 			member.session.getRemote().sendStringByFuture(message);
+		}
+	}
+
+	public void writeAllMembers(byte[] data) {
+		for (WebsocketServerEvents member : members) {
+			try {
+				ByteBuffer buf = ByteBuffer.wrap(data);
+				member.session.getRemote().sendBytes(buf);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -100,6 +115,18 @@ public class WebsocketServerController {
 		    	System.err.println("Disabling webSocketEvent() because of an error.");
 		    	e.printStackTrace();
 		    	serverEvent = null;
+		    }
+		}
+	}
+
+	public void sendToOnBinaryListener(byte[] buf, int offset, int length){
+		if (serverEvent != null) {
+		    try {
+					serverEventBinary.invoke(parent, buf, offset, length);
+		    } catch (Exception e) {
+					System.err.println("Disabling webSocketEvent() because of an error.");
+					e.printStackTrace();
+					serverEventBinary = null;
 		    }
 		}
 	}
