@@ -18,7 +18,7 @@ import processing.core.PApplet;
 public class WebsocketServerController {
 
 	private List<WebsocketServerEvents> members = new ArrayList<>();
-	private PApplet parent;
+	private Object parent;
 	private Method serverEvent;
 	private Method serverEventBinary;
 	
@@ -29,8 +29,8 @@ public class WebsocketServerController {
 	 * @param p The Processing sketch's PApplet object
 	 * @param serverEvent The Processing sketch's websocket event function
 	 */
-	public WebsocketServerController(PApplet p, Method serverEvent, Method serverEventBinary){
-		parent=p;
+	public WebsocketServerController(Object p, Method serverEvent, Method serverEventBinary){
+		parent = p;
 		this.serverEvent=serverEvent;
 		this.serverEventBinary=serverEventBinary;
 	}

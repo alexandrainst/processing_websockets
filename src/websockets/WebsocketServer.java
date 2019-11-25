@@ -15,7 +15,6 @@ import processing.core.PApplet;
  *
  */
 public class WebsocketServer {
-	private PApplet parent;
 	private Method websocketServerEvent;
 	private Method websocketServerEventBinary;
 	private WebsocketServerController serverController;
@@ -24,39 +23,54 @@ public class WebsocketServer {
 	 *
 	 * The websocket server object that is initiated directly in the Processing sketch
 	 *
-	 * @param parent Processings PApplet object
+	 * @param parent Processing's PApplet object
 	 * @param port The port number you want the websocket server to initiate its connection on
 	 * @param uri The uri you want your server to respond to. Ex. /john (if the port is set to ex. 8025, then the full URI would be ws://localhost:8025/john).
 	 */
 	public WebsocketServer(PApplet parent, int port, String uri){
-		this.parent=parent;
-		this.parent.registerMethod("dispose", this);
+		this(parent, parent, port, uri);
+	}
+
+	/**
+	 *
+	 * @param parent Processing's PApplet object
+	 * @param callbacks The object implementing .webSocketServerEvent()
+	 * @param port The port number you want the websocket server to initiate its connection on
+	 * @param uri The uri you want your server to respond to. Ex. /john (if the port is set to ex. 8025, then the full URI would be ws://localhost:8025/john).
+	 */
+	public WebsocketServer(PApplet parent, Object callbacks, int port,
+						   String uri) {
+
+		parent.registerMethod("dispose", this);
 
 		try {
-        	websocketServerEvent = parent.getClass().getMethod("webSocketServerEvent", String.class);
-					websocketServerEventBinary = parent.getClass().getMethod("webSocketServerEvent", byte[].class, int.class, int.class);
-        } catch (Exception e) {
-        	// no such method, or an error.. which is fine, just ignore
-        }
+			websocketServerEvent = callbacks.getClass().getMethod(
+					"webSocketServerEvent", String.class);
+			websocketServerEventBinary = callbacks.getClass().getMethod(
+					"webSocketServerEvent", byte[].class, int.class, int.class);
+		} catch (Exception e) {
+			// no such method, or an error.. which is fine, just ignore
+		}
 
 		Server server = new Server(port);
-		serverController = new WebsocketServerController(parent, websocketServerEvent, websocketServerEventBinary);
+		serverController = new WebsocketServerController(callbacks,
+				websocketServerEvent, websocketServerEventBinary);
 
-		WebSocketHandler wsHandler = new WebSocketHandler(){
+		WebSocketHandler wsHandler = new WebSocketHandler() {
 
-			 	@Override
-			    public void configure(WebSocketServletFactory factory){
-			        factory.setCreator(new WebsocketServerCreator(serverController));
-			    }
-        };
+			@Override
+			public void configure(WebSocketServletFactory factory){
+				factory.setCreator(new WebsocketServerCreator(serverController));
+			}
+		};
 
-        ContextHandler contextHandler = new ContextHandler(uri);
-	    contextHandler.setAllowNullPathInfo(true); // disable redirect from /ws to /ws/
-	    contextHandler.setHandler(wsHandler);
+		ContextHandler contextHandler = new ContextHandler(uri);
+		contextHandler.setAllowNullPathInfo(true); // disable redirect from /ws to /ws/
+		contextHandler.setHandler(wsHandler);
 
 		server.setHandler(contextHandler);
 
-        try {
+		try {
 			server.start();
 		} catch (Exception e) {
 			e.printStackTrace();

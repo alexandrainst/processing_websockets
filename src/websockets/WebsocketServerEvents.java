@@ -22,7 +22,7 @@ public class WebsocketServerEvents {
     public WebsocketServerController ctrl;
     
     public WebsocketServerEvents(WebsocketServerController ctrl) {
-		this.ctrl=ctrl;
+		this.ctrl = ctrl;
 	}
  
     /**
