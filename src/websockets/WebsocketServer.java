@@ -42,6 +42,10 @@ public class WebsocketServer {
 
 		parent.registerMethod("dispose", this);
 
+		System.setProperty("org.eclipse.jetty.util.log.class",
+				"org.eclipse.jetty.util.log.StdErrLog");
+		System.setProperty("org.eclipse.jetty.LEVEL", "OFF");
+
 		Server server = new Server(port);
 		serverController = new WebsocketServerController(listenerObject);
 
