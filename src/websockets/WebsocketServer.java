@@ -12,12 +12,15 @@ import processing.core.PApplet;
 /**
  *
  * @author Lasse Steenbock Vestergaard
+ * @author Abe Pazos (changes)
  *
  */
 public class WebsocketServer {
 	private Method websocketServerEvent;
 	private Method websocketServerEventBinary;
 	private WebsocketServerController serverController;
+
+	private static int MAX_MSG_SIZE = 65536;
 
 	/**
 	 *
@@ -60,6 +63,8 @@ public class WebsocketServer {
 
 			@Override
 			public void configure(WebSocketServletFactory factory){
+				factory.getPolicy().setMaxTextMessageSize(MAX_MSG_SIZE);
+				factory.getPolicy().setMaxBinaryMessageSize(MAX_MSG_SIZE);
 				factory.setCreator(new WebsocketServerCreator(serverController));
 			}
 		};
@@ -93,6 +98,17 @@ public class WebsocketServer {
 		serverController.writeAllMembers(data);
 	}
 
+	/**
+	 * Set the max message size in bytes, 64Kb by default
+	 * @param bytes
+	 */
+	public static void setMaxMessageSize(int bytes) {
+		MAX_MSG_SIZE = bytes;
+	}
+
+	/**
+	 *
+	 */
 	public void dispose(){
 		// Anything in here will be called automatically when
 	    // the parent sketch shuts down. For instance, this might
