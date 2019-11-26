@@ -17,6 +17,7 @@ public class WebsocketServer {
 	private WebsocketServerController serverController;
 
 	private static int MAX_MSG_SIZE = 65536;
+	private static boolean DEBUG = false;
 
 	/**
 	 *
@@ -42,9 +43,9 @@ public class WebsocketServer {
 
 		parent.registerMethod("dispose", this);
 
-		System.setProperty("org.eclipse.jetty.util.log.class",
-				"org.eclipse.jetty.util.log.StdErrLog");
-		System.setProperty("org.eclipse.jetty.LEVEL", "OFF");
+		if(!DEBUG) {
+			org.eclipse.jetty.util.log.Log.setLog(new NoLogging());
+		}
 
 		Server server = new Server(port);
 		serverController = new WebsocketServerController(listenerObject);
@@ -120,6 +121,14 @@ public class WebsocketServer {
 	 */
 	public static void setMaxMessageSize(int bytes) {
 		MAX_MSG_SIZE = bytes;
+	}
+
+	/**
+	 * Enable logging, disabled by default because it looks like errors
+	 * in the Processing IDE
+	 */
+	public static void enableDebug() {
+		DEBUG = true;
 	}
 
 	/**
