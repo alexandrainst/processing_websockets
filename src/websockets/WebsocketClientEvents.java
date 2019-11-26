@@ -11,9 +11,6 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
-import processing.core.PApplet;
-
-
 /**
  * 
  * @author Lasse Steenbock Vestergaard

@@ -84,17 +84,21 @@ public class WebsocketServer {
 
 	/**
 	 *
-	 * This method is used for sending messages to all connected clients. This method will be updated with the possibility for sending messages to specific clients!
+	 * Send String message to all connected clients
 	 *
-	 * @param message The message you want to send to all clients
+	 * @param message The message content as a String
 	 */
-	//TODO: Add possibility for sending back to specific client
-	public void sendMessage(String message){
+	public void sendMessage(String message) {
 		serverController.writeAllMembers(message);
-
 	}
 
-	public void sendMessage(byte[] data){
+	/**
+	 *
+	 * Send byte[] message to all connected clients
+	 *
+	 * @param data The message content as a byte[]
+	 */
+	public void sendMessage(byte[] data) {
 		serverController.writeAllMembers(data);
 	}
 

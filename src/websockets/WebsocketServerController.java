@@ -6,13 +6,13 @@ import java.util.List;
 import java.nio.ByteBuffer;
 import java.io.IOException;
 
-import processing.core.PApplet;
-
 /**
  * 
  * @author Lasse Steenbock Vestergaard
+ * @author Abe Pazos (changes)
  *
- * Intermediate class responsible for keeping track of client connections, and propagate method calls between the websocket events and the Processing sketch 
+ * Intermediate class responsible for keeping track of client connections,
+ * and propagate method calls between the websocket events and the Processing sketch
  *
  */
 public class WebsocketServerController {
@@ -24,10 +24,10 @@ public class WebsocketServerController {
 	
 	/**
 	 * 
-	 * Initiates the communication management between websocket events and the Processing sketch
-	 * 
-	 * @param p The Processing sketch's PApplet object
-	 * @param serverEvent The Processing sketch's websocket event function
+	 * Initiates the communication management between websocket events and
+	 * the Processing sketch
+	 *
+	 * @param listenerObject The Processing sketch's PApplet object
 	 */
 	public WebsocketServerController(Object p, Method serverEvent, Method serverEventBinary){
 		parent = p;
@@ -59,7 +59,7 @@ public class WebsocketServerController {
 	 * 
 	 * Writes a message to all active clients
 	 * 
-	 * @param message Message to send to all clients
+	 * @param message String to send to all clients
 	 */
 	public void writeAllMembers(String message) {
 		for (WebsocketServerEvents member : members) {
@@ -67,6 +67,12 @@ public class WebsocketServerController {
 		}
 	}
 
+	/**
+	 *
+	 * Writes a message to all active clients
+	 *
+	 * @param data byte[] to send to all clients
+	 */
 	public void writeAllMembers(byte[] data) {
 		for (WebsocketServerEvents member : members) {
 			try {
@@ -80,10 +86,10 @@ public class WebsocketServerController {
 
 	/**
 	 * 
-	 * This method is not yet fully implemented, and therefore not working!
-	 * 
-	 * @param memberName Name of the specific client
-	 * @param message Message to send to client
+	 * Send message to one member
+	 *
+	 * @param message String to send to client
+	 * @param uid id of the specific client
 	 */
 	public void writeSpecificMember(String memberName, String message) {
 		WebsocketServerEvents member = findMemberByName(memberName);
@@ -112,7 +118,7 @@ public class WebsocketServerController {
 		    try {
 		    	serverEvent.invoke(parent, message);
 		    } catch (Exception e) {
-		    	System.err.println("Disabling webSocketEvent() because of an error.");
+		    	System.err.println("Disabling webSocketEvent()");
 		    	e.printStackTrace();
 		    	serverEvent = null;
 		    }
@@ -124,7 +130,7 @@ public class WebsocketServerController {
 		    try {
 					serverEventBinary.invoke(parent, buf, offset, length);
 		    } catch (Exception e) {
-					System.err.println("Disabling webSocketEvent() because of an error.");
+					System.err.println("Disabling webSocketEvent()");
 					e.printStackTrace();
 					serverEventBinary = null;
 		    }
