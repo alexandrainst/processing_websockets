@@ -149,6 +149,8 @@ or
 
 ### How to instantiate the WebsocketServer in your own class instead of the PApplet
 
+Note the extra second argument in the constructor. That's the Object that will implement all the webSocketXXX() methods. Without that second argument it is assumed that the PApplet will implement such methods.
+
 ```
 public class CaptainSocket {
   WebsocketServer ws;
