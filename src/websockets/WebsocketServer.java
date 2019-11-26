@@ -1,7 +1,5 @@
 package websockets;
 
-import java.lang.reflect.Method;
-
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.websocket.server.WebSocketHandler;
@@ -16,8 +14,6 @@ import processing.core.PApplet;
  *
  */
 public class WebsocketServer {
-	private Method websocketServerEvent;
-	private Method websocketServerEventBinary;
 	private WebsocketServerController serverController;
 
 	private static int MAX_MSG_SIZE = 65536;
@@ -37,27 +33,17 @@ public class WebsocketServer {
 	/**
 	 *
 	 * @param parent Processing's PApplet object
-	 * @param callbacks The object implementing .webSocketServerEvent()
+	 * @param listenerObject The object implementing .webSocketServerEvent()
 	 * @param port The port number you want the websocket server to initiate its connection on
 	 * @param uri The uri you want your server to respond to. Ex. /john (if the port is set to ex. 8025, then the full URI would be ws://localhost:8025/john).
 	 */
-	public WebsocketServer(PApplet parent, Object callbacks, int port,
+	public WebsocketServer(PApplet parent, Object listenerObject, int port,
 						   String uri) {
 
 		parent.registerMethod("dispose", this);
 
-		try {
-			websocketServerEvent = callbacks.getClass().getMethod(
-					"webSocketServerEvent", String.class);
-			websocketServerEventBinary = callbacks.getClass().getMethod(
-					"webSocketServerEvent", byte[].class, int.class, int.class);
-		} catch (Exception e) {
-			// no such method, or an error.. which is fine, just ignore
-		}
-
 		Server server = new Server(port);
-		serverController = new WebsocketServerController(callbacks,
-				websocketServerEvent, websocketServerEventBinary);
+		serverController = new WebsocketServerController(listenerObject);
 
 		WebSocketHandler wsHandler = new WebSocketHandler() {
 
@@ -100,6 +86,28 @@ public class WebsocketServer {
 	 */
 	public void sendMessage(byte[] data) {
 		serverController.writeAllMembers(data);
+	}
+
+	/**
+	 *
+	 * Send String message to one receiver
+	 *
+	 * @param message The message content as a String
+	 * @param to Receiver userId of this message
+	 */
+	public void sendMessageTo(String message, String to) {
+		serverController.writeSpecificMember(message, to);
+	}
+
+	/**
+	 *
+	 * Send byte[] message to one receiver
+	 *
+	 * @param data The message content as a byte[]
+	 * @param to Receiver userId of this message
+	 */
+	public void sendMessageTo(byte[] data, String to) {
+		serverController.writeSpecificMember(data, to);
 	}
 
 	/**
