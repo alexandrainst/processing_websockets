@@ -2,6 +2,13 @@ package websockets;
 
 import org.eclipse.jetty.util.log.Logger;
 
+/**
+ * @author Abe Pazos
+ *
+ * A silent logger for Jetty. Used to mute Jetty and avoid excessive
+ * INFO messages in the Processing IDE's console.
+ */
+
 public class NoLogging implements Logger {
     @Override public String getName() { return "no"; }
     @Override public void warn(String msg, Object... args) { }

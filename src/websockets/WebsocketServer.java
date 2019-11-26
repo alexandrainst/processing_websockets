@@ -15,6 +15,7 @@ import processing.core.PApplet;
  */
 public class WebsocketServer {
 	private WebsocketServerController serverController;
+	private Server server;
 
 	private static int MAX_MSG_SIZE = 65536;
 	private static boolean DEBUG = false;
@@ -43,19 +44,24 @@ public class WebsocketServer {
 
 		parent.registerMethod("dispose", this);
 
+		// Logging is disabled by default because it looks like errors
+		// in the Processing IDE (five red INFO messages on start)
 		if(!DEBUG) {
 			org.eclipse.jetty.util.log.Log.setLog(new NoLogging());
 		}
 
-		Server server = new Server(port);
+		server = new Server(port);
 		serverController = new WebsocketServerController(listenerObject);
 
 		WebSocketHandler wsHandler = new WebSocketHandler() {
 
 			@Override
 			public void configure(WebSocketServletFactory factory){
+				// Set max message sizes. Set by calling the static
+				// method setMaxMessageSize(bytes) before the constructor.
 				factory.getPolicy().setMaxTextMessageSize(MAX_MSG_SIZE);
 				factory.getPolicy().setMaxBinaryMessageSize(MAX_MSG_SIZE);
+
 				factory.setCreator(new WebsocketServerCreator(serverController));
 			}
 		};
@@ -138,5 +144,12 @@ public class WebsocketServer {
 		// Anything in here will be called automatically when
 	    // the parent sketch shuts down. For instance, this might
 	    // shut down a thread used by this library.
+		try {
+			System.out.println("Closing websockets...");
+			server.stop();
+			System.out.println("...websockets closed");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
