@@ -107,7 +107,71 @@ void webSocketServerEvent(String msg){
  y=random(height);
 }
 ```
+
+### Set message max size
+
+Call this method before calling the constructor to specify the message max size in bytes
+
+    WebsocketServer.setMaxMessageSize(200000);
+
+### Enable logging
+
+By default logging has been disabled, as it looks like errors in the
+Processing IDE's console. Call this method before calling the constructor
+
+    WebsocketServer.enableDebug();
+
+### How to be notified of user connections / disconnections
+
+Implement the following two methods, which will receive the user id hash and
+the user IP address.
+
+```
+public void webSocketConnectEvent(String uid, String ip) {
+  println("Someone connected", uid, ip);
+}
+  
+public void webSocketDisconnectEvent(String uid, String ip) {
+  println("Someone disconnected", uid, ip);
+}
+```
+
+### How to send a message to a specific user
+
+You need the user ID to send a message to that user only. 
+You receive that user ID when the user first connects.
+
+    ws.sendMessageTo("message", "userID");
+
+or
+
+    ws.sendMessageTo(byteArray, "userID");
+
+### How to instantiate the WebsocketServer in your own class instead of the PApplet
+
+```
+public class CaptainSocket {
+  WebsocketServer ws;
+  CaptainSocket(PApplet p5) {
+    ws = new WebsocketServer(p5, this, 8025, "/miau");
+  }
+  public void webSocketServerEvent(String msg) {
+    println(msg);
+  }
+}  
+
+... in your PApplet ...
+
+CaptainSocket  socket;
+void setup() {
+  socket = new CaptainSocket(this);
+}
+
+```
+
+
 ## Technical development details
+
 The library has been developed on a Mac with El Capitan, I have used the Eclipse Luna IDE,
 and I have only tested on Processing version 3.0.1.
 
