@@ -17,27 +17,43 @@ public class WebsocketClient {
 	private Method webSocketEvent;
 	private Method webSocketEventBinary;
 	private WebsocketClientEvents socket;
-	
+
 	/**
-	 * 
+	 *
 	 * Initiating the client connection
-	 * 
-	 * @param parent The PApplet object coming from Processing
+	 *
+	 * @param parent Processing's PApplet object
 	 * @param endpointURI The URI to connect to Ex. ws://localhost:8025/john
 	 */
 	public WebsocketClient(PApplet parent, String endpointURI) {
+		this(parent, parent, endpointURI);
+	}
+
+	/**
+	 * More flexible constructor in case you don't want callbacks called
+	 * in your PApplet but in a different class. Use this if you are
+	 * instantiating WebsocketClient in a class.
+	 *
+	 * @param parent Processing's PApplet object
+	 * @param callbacks The object implementing .webSocketEvent()
+	 * @param endpointURI The URI to connect to Ex. ws://localhost:8025/john
+	 */
+	public WebsocketClient(PApplet parent, Object callbacks,
+						   String endpointURI) {
 		parent.registerMethod("dispose", this);
-		
+
 		try {
-        	webSocketEvent = parent.getClass().getMethod("webSocketEvent", String.class);
-        	webSocketEventBinary = parent.getClass().getMethod("webSocketEvent", byte[].class, int.class, int.class);
-        } catch (Exception e) {
-        	// no such method, or an error.. which is fine, just ignore
-        }
-		
+			webSocketEvent = callbacks.getClass().getMethod("webSocketEvent",
+					String.class);
+			webSocketEventBinary = callbacks.getClass().getMethod("webSocketEvent", byte[].class, int.class, int.class);
+		} catch (Exception e) {
+			// no such method, or an error.. which is fine, just ignore
+		}
+
 		WebSocketClient client = new WebSocketClient();
 		try {
-			socket = new WebsocketClientEvents(parent, webSocketEvent, webSocketEventBinary);
+			socket = new WebsocketClientEvents(callbacks, webSocketEvent,
+					webSocketEventBinary);
 			client.start();
 			URI echoUri = new URI(endpointURI);
 			ClientUpgradeRequest request = new ClientUpgradeRequest();
@@ -48,11 +64,11 @@ public class WebsocketClient {
 			t.printStackTrace();
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * Send message to the websocket server. At a later stage it should be possible to send messages to specific clients connected to the same server
-	 * 
+	 *
 	 * @param message The message to send
 	 */
 	public void sendMessage(String message){

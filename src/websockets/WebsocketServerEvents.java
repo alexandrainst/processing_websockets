@@ -11,8 +11,10 @@ import java.nio.ByteBuffer;
 /**
  * 
  * @author Lasse Steenbock Vestergaard
+ * @author Abe Pazos (changes)
  * 
- * This class is responsible for handling all events relating to the websocket server
+ * This class is responsible for handling all events
+ * relating to the websocket server
  *
  */
 @WebSocket
@@ -22,7 +24,7 @@ public class WebsocketServerEvents {
     public WebsocketServerController ctrl;
     
     public WebsocketServerEvents(WebsocketServerController ctrl) {
-		this.ctrl=ctrl;
+		this.ctrl = ctrl;
 	}
  
     /**

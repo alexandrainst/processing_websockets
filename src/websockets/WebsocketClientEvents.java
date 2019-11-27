@@ -11,9 +11,6 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
-import processing.core.PApplet;
-
-
 /**
  * 
  * @author Lasse Steenbock Vestergaard
@@ -25,11 +22,11 @@ import processing.core.PApplet;
 public class WebsocketClientEvents {
 	private Session session;
 	CountDownLatch latch = new CountDownLatch(1);
-	private PApplet parent;
+	private Object parent;
 	private Method onMessageEvent;
 	private Method onMessageEventBinary;
 
-	public WebsocketClientEvents(PApplet p, Method event, Method eventBinary) {
+	public WebsocketClientEvents(Object p, Method event, Method eventBinary) {
 		parent = p;
 		onMessageEvent = event;
 		onMessageEventBinary = eventBinary;
