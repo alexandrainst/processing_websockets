@@ -2,6 +2,7 @@ package websockets;
 
 import java.lang.reflect.Method;
 import java.net.URI;
+import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
 import processing.core.PApplet;
@@ -50,7 +51,15 @@ public class WebsocketClient {
 			// no such method, or an error.. which is fine, just ignore
 		}
 
-		WebSocketClient client = new WebSocketClient();
+		WebSocketClient client = null;
+
+		if(endpointURI.startsWith("wss")) {
+			SslContextFactory ssl = new SslContextFactory();
+			client = new WebSocketClient(ssl);
+		} else {
+			client = new WebSocketClient();
+		}
+
 		try {
 			socket = new WebsocketClientEvents(callbacks, webSocketEvent,
 					webSocketEventBinary);
