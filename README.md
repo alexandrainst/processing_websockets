@@ -115,7 +115,7 @@ Construct your `WebsocketClient` with custom headers passing them as a `StringAr
 ```java
   StringList headers = new StringList();
   headers.append("User-Agent:Processing");
-  wsc= new WebsocketClient(this, "ws://simple-websocket-server-echo.glitch.me/", headers);
+  wsc=new WebsocketClient(this, "ws://simple-websocket-server-echo.glitch.me/", headers);
 ```
 
 
