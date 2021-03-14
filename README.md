@@ -27,7 +27,7 @@ In the below code I draw a new ellipse at a random location (without removing th
 each time I get a message from the websocket server, and I send a message to the server every
 5 seconds ("Client message").
 
-```
+```java
 import websockets.*;
 
 WebsocketClient wsc;
@@ -72,7 +72,7 @@ In the following I provide the full example code of creating a websocket server 
 In the below code I move an ellipse to a random location when I get a message from a client,
 and I send a message to ll clients every 5 seconds ("Server message").
 
-```
+```java
 import websockets.*;
 
 WebsocketServer ws;
@@ -108,6 +108,17 @@ void webSocketServerEvent(String msg){
 }
 ```
 
+### How to set custom headers on your client
+
+Construct your `WebsocketClient` with custom headers passing them as a `StringArray`, with `key:value` pairs separated by colons:
+
+```java
+  StringList headers = new StringList();
+  headers.append("User-Agent:Processing");
+  wsc=new WebsocketClient(this, "ws://simple-websocket-server-echo.glitch.me/", headers);
+```
+
+
 ### Set message max size
 
 Call this method before calling the constructor to specify the message max size in bytes
@@ -126,7 +137,7 @@ Processing IDE's console. Call this method before calling the constructor
 Implement the following two methods, which will receive the user id hash and
 the user IP address.
 
-```
+```java
 public void webSocketConnectEvent(String uid, String ip) {
   println("Someone connected", uid, ip);
 }
@@ -151,7 +162,7 @@ or
 
 Note the extra second argument in the constructor. That's the Object that will implement all the webSocketXXX() methods. Without that second argument it is assumed that the PApplet will implement such methods.
 
-```
+```java
 public class CaptainSocket {
   WebsocketServer ws;
   CaptainSocket(PApplet p5) {
@@ -170,7 +181,6 @@ void setup() {
 }
 
 ```
-
 
 ## Technical development details
 

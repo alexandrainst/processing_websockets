@@ -2,6 +2,7 @@ package websockets;
 
 import java.lang.reflect.Method;
 import java.net.URI;
+import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
@@ -27,7 +28,19 @@ public class WebsocketClient {
 	 * @param endpointURI The URI to connect to Ex. ws://localhost:8025/john
 	 */
 	public WebsocketClient(PApplet parent, String endpointURI) {
-		this(parent, parent, endpointURI);
+		this(parent, parent, endpointURI, new StringList());
+	}
+
+	/**
+	 *
+	 * Initiating the client connection
+	 *
+	 * @param parent Processing's PApplet object
+	 * @param endpointURI The URI to connect to Ex. ws://localhost:8025/john
+	 * @param headers A list of custom headers to attach to the WS request, like "User-Agent:Processing"
+	 */
+	public WebsocketClient(PApplet parent, String endpointURI, StringList headers) {
+		this(parent, parent, endpointURI, headers);
 	}
 
 	/**
@@ -38,9 +51,10 @@ public class WebsocketClient {
 	 * @param parent Processing's PApplet object
 	 * @param callbacks The object implementing .webSocketEvent()
 	 * @param endpointURI The URI to connect to Ex. ws://localhost:8025/john
+	 * @param headers A list of custom headers to attach to the WS request, like "User-Agent:Processing"
 	 */
 	public WebsocketClient(PApplet parent, Object callbacks,
-						   String endpointURI) {
+						   String endpointURI, StringList headers) {
 		parent.registerMethod("dispose", this);
 
 		try {
@@ -66,6 +80,20 @@ public class WebsocketClient {
 			client.start();
 			URI echoUri = new URI(endpointURI);
 			ClientUpgradeRequest request = new ClientUpgradeRequest();
+
+			// If headers are present, set them 
+			for (String header : headers)
+			{
+				String[] h = header.split(":");
+				if (h.length != 2) 
+				{
+				throw new Exception("Incorrectly formatted header \"" + header + 
+					"\", please use \":\" to separate key and value, " +
+					"as in \"User-Agent:Processing\"");
+				}
+				request.setHeader(h[0], h[1]);
+			}
+
 			client.connect(socket, echoUri, request);
 			socket.getLatch().await();
 
