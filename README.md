@@ -5,8 +5,7 @@ outside world including web sites. With this library it is possible to have true
 real-time connections with other Processing sketches, web sites, Internet of Things
 devices, etc.**
 
-## Updates
-This is the initial version of the library, and it is therefore an update in it self :-)
+> 🙋 We are looking for a new maintainer / owner of this repository
 
 ## Download
 The library can be downloaded here:
